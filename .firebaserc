@@ -1,0 +1,5 @@
+{
+  "projects": {
+    "default": "deploy-app-nakano"
+  }
+}
