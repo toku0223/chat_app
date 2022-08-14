@@ -34,7 +34,7 @@ export default function SignIn() {
         const result = await loginHandleClick()
         console.log(result)
         if (result.displayName !== "") {
-            navigate('/chat')
+            navigate('/chat', { displayName: result.displayName })
         }
     };
 

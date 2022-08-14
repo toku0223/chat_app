@@ -4,7 +4,6 @@ import { messageData } from '../plugins/firebase';
 const Chat = () => {
     const [message, setMessage] = useState('')
     const [userName, setUserName] = useState('')
-    const [date, setDate] = useState('')
 
     const createMessage = async () => {
         console.log('ready')
