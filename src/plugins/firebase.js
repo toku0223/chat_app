@@ -29,6 +29,7 @@ export const auth = getAuth();
 
 export const db = getFirestore();
 
+
 // ログイン
 export const loginHandleClick = () => {
     const auth = getAuth();
@@ -62,20 +63,20 @@ export const loginHandleClick = () => {
 
 // メッセージ
 
-export const messageData = async (message, userName, avatarURL) => {
+export const messageData = async (message, userName) => {
     let returnObj = ""
     console.log('firebase start')
+
     try {
         const docRef = await addDoc(collection(db, "Massages"), {
             message,
-            userName,
+            userName: displayName,
             timestamp: serverTimestamp(),
-            avatarURL,
         });
         returnObj = "test1"
         console.log("Document written with ID:", docRef.id);
     } catch (e) {
-        returnObj = "test2"
+        returnObj = "error"
         console.error("Error adding document:", e)
     }
     return returnObj
