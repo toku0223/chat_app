@@ -1,7 +1,7 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import {
-    addDoc, collection, getFirestore, serverTimestamp
+    addDoc, collection, getFirestore, onSnapshot, query, serverTimestamp, where
 } from "firebase/firestore";
 
 
@@ -68,9 +68,9 @@ export const messageData = async (message, userName) => {
     console.log('firebase start')
 
     try {
-        const docRef = await addDoc(collection(db, "Massages"), {
+        const docRef = await addDoc(collection(db, "Messages"), {
             message,
-            userName: displayName,
+            userName,
             timestamp: serverTimestamp(),
         });
         returnObj = "test1"
@@ -80,6 +80,16 @@ export const messageData = async (message, userName) => {
         console.error("Error adding document:", e)
     }
     return returnObj
+}
+
+export const massageLog = () => {
+    const q = query(collection(db, "Massages"), where("massage", "timestamp", "userName"));
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+        const Massages = [];
+        querySnapshot.forEach((doc) => {
+            Massages.push(doc.data().name);
+        });
+    })
 }
 
 export const createPersonal = async () => {
