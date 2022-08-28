@@ -1,4 +1,4 @@
-import { collection, onSnapshot, query } from "firebase/firestore";
+import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { db, messageData } from '../plugins/firebase';
@@ -9,31 +9,50 @@ const Chat = () => {
 
     const [message, setMessage] = useState('')
     const [userName, setUserName] = useState(state)
+    const [dm, setDm] = useState([])
+
+    const messagesRef = collection(db, "Messages")
 
     useEffect(() => {
         const q = query(collection(db, "Messages"));
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
-            const cities = [];
+            const messages = [];
             querySnapshot.forEach((doc) => {
-                cities.push(doc.data().userName);
-                console.log(doc.data())
+                messages.push(doc.data());
+
             });
-            console.log("Current cities in CA: ", cities.join(", "));
+            console.log("Current cities in CA: ", messages.join(", "));
+            setDm(messages)
         });
 
     }, [])
+    console.log(dm)
+    const q1 = query(messagesRef, orderBy("userName", "desc"))
 
     const createMessage = async () => {
         console.log('ready')
         const res = await messageData(message, userName)
-        setUserName(state.displayName)
         console.log(userName)
         console.log('complete', res)
     }
 
     return (
         <>
-            <h2>{userName}</h2><p>{message}</p>
+
+            <ul>
+                {
+                    dm.map((d, index) => {
+                        return (
+
+                            <li key={index}>
+                                <p>{d.userName}</p>
+                                <p>{d.message}</p>
+                            </li>
+
+                        )
+                    })
+                }
+            </ul>
             <input
                 type="text"
                 placeholder="メッセージを入力してください。"
