@@ -12,9 +12,10 @@ const Chat = () => {
     const [dm, setDm] = useState([])
 
     const messagesRef = collection(db, "Messages")
-
     useEffect(() => {
-        const q = query(collection(db, "Messages"));
+        // 名前とイメージURLの分離
+
+        const q = query(collection(db, "Messages"), orderBy("timestamp", "asc"));
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
             const messages = [];
             querySnapshot.forEach((doc) => {
@@ -26,8 +27,10 @@ const Chat = () => {
         });
 
     }, [])
-    console.log(dm)
-    const q1 = query(messagesRef, orderBy("userName", "desc"))
+    console.log(dm, "test")
+    const q1 = query(messagesRef, orderBy("timestamp", "desc"))
+
+    console.log(state, "test2")
 
     const createMessage = async () => {
         console.log('ready')
@@ -43,7 +46,6 @@ const Chat = () => {
                 {
                     dm.map((d, index) => {
                         return (
-
                             <li key={index}>
                                 <p>{d.userName}</p>
                                 <p>{d.message}</p>

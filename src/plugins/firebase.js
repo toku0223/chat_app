@@ -1,7 +1,7 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import {
-    addDoc, collection, getFirestore, onSnapshot, query, serverTimestamp, where
+    addDoc, collection, getFirestore, serverTimestamp
 } from "firebase/firestore";
 
 
@@ -31,6 +31,10 @@ export const db = getFirestore();
 
 
 // ログイン
+/**
+ * ログイン
+ * @returns null 
+ */
 export const loginHandleClick = () => {
     const auth = getAuth();
     return new Promise((resolve, reject) => {
@@ -57,13 +61,11 @@ export const loginHandleClick = () => {
                 return reject(errorMessage)
             });
     })
-
-
 }
 
 // メッセージ
 
-export const messageData = async (message, userName) => {
+export const messageData = async (message, userName, avatarURL) => {
     let returnObj = ""
     console.log('firebase start')
 
@@ -72,6 +74,7 @@ export const messageData = async (message, userName) => {
             message,
             userName,
             timestamp: serverTimestamp(),
+            avatarURL,
         });
         returnObj = "test1"
         console.log("Document written with ID:", docRef.id);
@@ -82,15 +85,7 @@ export const messageData = async (message, userName) => {
     return returnObj
 }
 
-export const massageLog = () => {
-    const q = query(collection(db, "Massages"), where("massage", "timestamp", "userName"));
-    const unsubscribe = onSnapshot(q, (querySnapshot) => {
-        const Massages = [];
-        querySnapshot.forEach((doc) => {
-            Massages.push(doc.data().name);
-        });
-    })
-}
+
 
 export const createPersonal = async () => {
     const info = {}
