@@ -1,6 +1,6 @@
 import Avatar from '@mui/material/Avatar';
 import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { db, messageData } from '../plugins/firebase';
 import "./chat.css";
@@ -14,6 +14,16 @@ const Chat = () => {
     const [userName, setUserName] = useState(state.substring(0, state.indexOf("/")))
     const [dm, setDm] = useState([])
     const [url, setURL] = useState(state.substring(state.indexOf("/") + 1))
+    const scrollBottomRef = useRef(null);
+    useLayoutEffect(() => {
+        if (scrollBottomRef && scrollBottomRef.current) {
+            scrollBottomRef.current.scrollIntoView()
+        }
+    }, []);
+    const pageBottom = () => {
+
+
+    }
 
     const messagesRef = collection(db, "Messages")
     useEffect(() => {
@@ -44,6 +54,8 @@ const Chat = () => {
     const createMessage = async () => {
         console.log('ready')
         const res = await messageData(message, userName, url)
+        setMessage("")
+        scrollBottomRef.current.scrollIntoView()
         console.log(userName)
         console.log('complete', res)
     }
@@ -51,6 +63,7 @@ const Chat = () => {
     const pressEnter = (e) => {
         if (e.key == 'Enter') {
             e.preventDefault()
+            createMessage()
         }
     }
     return (
@@ -71,16 +84,15 @@ const Chat = () => {
             </ul>
             <input
                 type="text"
-                color="primary"
                 placeholder="メッセージを入力してください。"
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
+                onKeyDown={pressEnter}
             />
-            <button onClick={createMessage}
-
-            >
+            <button onClick={createMessage}>
                 送信
             </button>
+            <div ref={scrollBottomRef} />
         </>
     )
 }
