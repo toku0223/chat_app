@@ -48,6 +48,11 @@ const Chat = () => {
         console.log('complete', res)
     }
 
+    const pressEnter = (e) => {
+        if (e.key == 'Enter') {
+            e.preventDefault()
+        }
+    }
     return (
         <>
             <ul>
@@ -66,10 +71,16 @@ const Chat = () => {
             </ul>
             <input
                 type="text"
+                color="primary"
                 placeholder="メッセージを入力してください。"
                 value={message}
-                onChange={(e) => setMessage(e.target.value)} />
-            <button onClick={createMessage}>送信</button>
+                onChange={(e) => setMessage(e.target.value)}
+            />
+            <button onClick={createMessage}
+
+            >
+                送信
+            </button>
         </>
     )
 }
